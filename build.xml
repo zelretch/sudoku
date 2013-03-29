@@ -1,0 +1,55 @@
+<project name="sudoku-solver" default="run" basedir=".">
+
+	<property name="lib" location="${basedir}/lib" />
+	<property name="src" location="${basedir}/src" />
+	<property name="bin" location="${basedir}/bin" />
+	<property name="test" location="/course/cs127/asgn/new_asgn/projects/sudoku-solver/test" />
+
+	<property name="main.class" value="sqlasgn.SudokuGUI" />
+	<property name="test.class" value="sqlasgn.SudokuSolverTest" />
+
+	<path id="all-path">
+		<pathelement path="${src}" />	
+		<pathelement path="${bin}" />
+                <fileset dir="${lib}">
+                        <include name="*.jar" />
+                </fileset>
+	</path>
+
+	<path id="classpath.test">
+		<pathelement location="/course/cs127/lib/junit.jar" />
+		<path refid="all-path" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${bin}" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${bin}" />
+		<javac srcdir="${src}" destdir="${bin}" includeantruntime="false" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="all-path" />
+		</javac>
+	</target>
+
+	<target name="compile-test">
+		<mkdir dir="${bin}" />
+		<javac srcdir="${src}:${test}" destdir="${bin}" includeantruntime="false" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="classpath.test" />
+		</javac>
+	</target>
+
+	<target name="run" depends="compile">
+		<java fork="true" classname="${main.class}">
+			<classpath refid="all-path" />
+		</java>
+	</target>
+
+	<target name="test" depends="compile-test">
+		<junit>
+			<classpath refid="classpath.test" />
+			<formatter type="plain" usefile="false" />
+			<test name="${test.class}" />
+		</junit>
+	</target>
+</project>
